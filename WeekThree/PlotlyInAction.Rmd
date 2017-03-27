@@ -36,15 +36,66 @@ file *TestDataForPlotly4.csv*.
 
 ![](Images/DataFrameForAssignmentThree.png)
 
-## Transforming the csv data for plotting in Plotly
+## Transforming the csv data for plotting
 
 ```{r transforming, echo = TRUE}
-
+df4 <- read.csv("TestDataForPlotly4.csv")
+vsl<-df4$vSL[!is.na(df4$vSL)]
+vsg<-df4$vSG[!is.na(df4$vSG)]
+VSL <- do.call( c, replicate(length(vsg),as.list(vsl)))
+# a list of 35 vectors of 26 values (910 in total)
+listOfVsgs<-lapply(vsg,function(x) replicate(26,x))	
+VSG<-Reduce(f="c",listOfVsgs)
+c(length(vsl),length(vsg),length(VSL),length(VSG))
+# Some tests:
+c(all(tail(VSL, n=26)==vsl),all(tail(VSG, n=26)==replicate(26,vsg[35])))
 ```
 
-## Slide with Plot
+## The new data frame for the scatter plot
 
-```{r pressure}
-plot(pressure)
+```{r dataFramePlot, echo = TRUE}
+responses <-data.frame(VSG=VSG, VSL=VSL, DPDX=df4$DpDx, EL=df4$EL)
+head(responses,n=2)
+tail(responses,n=2)
+```
+
+## The code for the plot
+
+```{r plotlydpdxCode, echo=TRUE,eval=FALSE}
+library(plotly)
+plot_ly(responses,
+         x= ~VSG, 
+         y= ~VSL, 
+         z= ~DPDX,
+         size = I(2),
+         type = "scatter3d",
+         color = ~DPDX) %>%
+     layout(title="Pressure gradient, dp/dx in Pa/m",
+            scene=list(xaxis=list(type = "log"),
+                       yaxis=list(type="log"),
+                       zaxis=list(type="log"),
+                       camera = list(eye = list(x = -1.6, 
+                                                y = -1.9, 
+                                                z = 0.6))))
+```
+
+## The plot
+
+```{r plotlydpdx, echo=FALSE, message=FALSE,warning=FALSE}
+library(plotly)
+plot_ly(responses,
+         x= ~VSG, 
+         y= ~VSL, 
+         z= ~DPDX,
+         size = I(2),
+         type = "scatter3d",
+         color = ~DPDX) %>%
+     layout(title="Pressure gradient, dp/dx in Pa/m",
+            scene=list(xaxis=list(type = "log"),
+                       yaxis=list(type="log"),
+                       zaxis=list(type="log"),
+                       camera = list(eye = list(x = -1.6, 
+                                                y = -1.9, 
+                                                z = 0.6))))
 ```
 
