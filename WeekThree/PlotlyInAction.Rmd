@@ -13,8 +13,9 @@ knitr::opts_chunk$set(echo = FALSE)
 ## The goal
 
 The goal of this presentation is to show how to transform a data set used to create
-a 3-D scatter plot presented in a Master of Science thesis from flow simulation data
-into a similar plot but using Plotly from **R**.
+a 3-D scatter plot in standard Matlab into a similar plot using Plotly from **R**.
+The original plot was part of a Master of Science thesis, generated from flow simulation data
+of oil and gas phases in a pipe of circular cross section.
 
 This is an assignment for the course **Developing Data Products** taught by Brian Caffo from the 
 from the John Hopkins University School of Public Health through Coursera.
