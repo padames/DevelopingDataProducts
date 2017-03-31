@@ -25,31 +25,11 @@ rm(dates)
 rm(df)
 
 GetStateStormData <- function( stormDataFrame, EffectName, EventType, cutOffLabels=1.0) {
-    ## stormDataFrame, ST=state abbreviation, EffectName=exact data frame column heading
+    ## stormDataFrame, EffectName=exact data frame column heading
     ## Subset the storm.data.frame
     #storm_data_ST <- stormDataFrame[stormDataFrame$STATE == ST,]
     storm_data_ST_EvtType <- stormDataFrame[ stormDataFrame$EVT_TYPE == EventType
                                             & stormDataFrame[EffectName]>=1,]
-    
-#    maxVal<-max(storm_data_ST_EvtType[EffectName]) # extract the value 
-#    scaling_factor<- cutOffLabels * maxVal/6.0
-    # cex_values <- sapply( X=as.vector(storm_data_ST_EvtType[EffectName]),
-    #                       FUN=function(x) x/scaling_factor ) 
-
-#    points(-storm_data_ST_EvtType$LONGITUDE/100, storm_data_ST_EvtType$LATITUDE/100, 
-#           pch=21, bg=alpha("red",0.25), cex=cex_values)
-    
-    # ST_EvtType <- storm_data_ST_EvtType[ storm_data_ST_EvtType[EffectName] >= scaling_factor, ]
-    # years_string <- (as.character.Date(storm_data_ST_EvtType$BGN_DATE,format="%d/%m/%Y"))
-    # years <- as.POSIXlt(years_string,format = "%d/%M/%Y")
-    # years <- as.character(format( as.Date(storm_data_ST_EvtType$BGN_DATE, format = "%m/%d/%Y %H:%M:%S"), "%Y"))
-    # effectCount <- as.character(storm_data_ST_EvtType[EffectName][,1]) 
-    # yearEffectCount <- paste0(years,rep(x=" (",length(years)), effectCount,rep(x=")",length(years)))
-    # maxLabel <- max(as.numeric(effectCount))
-    # scaling_factor_label <- maxLabel/1.5
-    # cex_labels <- sapply( X=as.vector(effectCount),FUN=function(x) as.numeric(x)/scaling_factor_label ) 
-    # pos_labels <- rep(c(2,1,1,4),times=(length(cex_labels)/4))
-#    text( -ST_EvtType$LONGITUDE/100, cex=cex_labels, ST_EvtType$LATITUDE/100, labels=yearEffectCount, pos=pos_labels )
     
     df <- storm_data_ST_EvtType[storm_data_ST_EvtType$LATITUDE > 0 & storm_data_ST_EvtType$LONGITUDE > 0,]
     dfMod <- transform( df, LATITUDE=df$LATITUDE/100, LONGITUDE=-df$LONGITUDE/100)
@@ -72,13 +52,6 @@ GenerateFatalityLabels <- function(df){
 
 dfFatalities <- GetStateStormData(dfMod,"FATALITIES","Hurricanes/Tornados/Thunderstorms")
 
-#paste0("ALL = ",length(df$COUNTY))
-#paste0("AL = ", length(dfST$COUNTY))
-#paste0("Ratio = ", length(dfST$COUNTY)/length(df$COUNTY) )
-
-
-#df %>% 
-#popup_labels <- sapply( X=dfFatalities$FATALITIES,FUN=function(x) paste0( as.character(x), " fatalities") )
 years <-as.character(as.Date(dfFatalities$DATE,format= "%d/%m/%Y"),"%Y-%b-%d")
 popup_labels <- mapply(FUN=function(x,y,z) paste(sep=" ", 
                                                  ifelse(is.na(y), "No date: ", paste0(y, ": ")), 
