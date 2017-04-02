@@ -70,10 +70,10 @@ plot_ly(responses,
          size = I(2),
          type = "scatter3d",
          color = ~DPDX) %>%
-     layout(title="Pressure gradient, dp/dx in Pa/m",
-            scene=list(xaxis=list(type = "log"),
-                       yaxis=list(type="log"),
-                       zaxis=list(type="log"),
+     layout(title="Pressure gradient, dp/dl in Pa/m",
+            scene=list(xaxis=list(title="Vsg, m/s",type = "log"),
+                       yaxis=list(title="Vsl, m/s",type="log"),
+                       zaxis=list(title="dp/dl",type="log"),
                        camera = list(eye = list(x = -1.6, 
                                                 y = -1.9, 
                                                 z = 0.6))))
@@ -81,7 +81,7 @@ plot_ly(responses,
 
 ## The plot
 
-```{r plotlydpdx, echo=FALSE, message=FALSE,warning=FALSE}
+```{r plotlydpdx, echo=FALSE, message=FALSE,warning=FALSE,fig.align='left',out.height=500,out.width=800}
 library(plotly)
 plot_ly(responses,
          x= ~VSG, 
@@ -90,10 +90,10 @@ plot_ly(responses,
          size = I(2),
          type = "scatter3d",
          color = ~DPDX) %>%
-     layout(title="Pressure gradient, dp/dx in Pa/m",
-            scene=list(xaxis=list(type = "log"),
-                       yaxis=list(type="log"),
-                       zaxis=list(type="log"),
+     layout(title="Pressure gradient, dp/dl in Pa/m",
+            scene=list(xaxis=list(title="Vsg, m/s", type = "log"),
+                       yaxis=list(title="Vsl, m/s", type= "log"),
+                       zaxis=list(title="dp/dl", type= "log"),
                        camera = list(eye = list(x = -1.6, 
                                                 y = -1.9, 
                                                 z = 0.6))))
