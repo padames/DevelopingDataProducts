@@ -20,29 +20,26 @@ GetStateStormData <- function( stormDataFrame, EffectName1, EffectName2,EventTyp
     filter_injuries <- ifelse(EffectName2=="INJURIES", 1, 100000000)   
     storm_data_frame <- stormDataFrame[ stormDataFrame$EVT_TYPE %in% EventType
                                         & stormDataFrame$FATALITIES>=filter_fatalities
-                                        & stormDataFrame$INJURIES>=filter_injuries
-                                        & stormDataFrame$DATE >= dateStart
-                                        & stormDataFrame$DATE <= dateEnd, ]
+                                        | stormDataFrame$INJURIES>=filter_injuries, ]
+                                        # & stormDataFrame$DATE >= dateStart
+                                        # & stormDataFrame$DATE <= dateEnd, ]
 
   }
   if ((EffectName1!="FATALITIES") & (EffectName2=="INJURIES")){
     filter_injuries <- ifelse(EffectName2=="INJURIES", 1, 100000000)   
     storm_data_frame <- stormDataFrame[ stormDataFrame$EVT_TYPE %in% EventType
-                                        & stormDataFrame$INJURIES>=filter_injuries
-                                        & stormDataFrame$DATE >= dateStart
-                                        & stormDataFrame$DATE <= dateEnd, ]
+                                        & stormDataFrame$INJURIES>=filter_injuries, ]
+                                        # & stormDataFrame$DATE >= dateStart
+                                        # & stormDataFrame$DATE <= dateEnd, ]
   }
   
   if ((EffectName1=="FATALITIES") & (EffectName2!="INJURIES")){
     filter_fatalities <- ifelse(EffectName1=="FATALITIES", 1, 100000000)
     storm_data_frame <- stormDataFrame[ stormDataFrame$EVT_TYPE %in% EventType
-                                        & stormDataFrame$FATALITIES>=filter_fatalities
-                                        & stormDataFrame$DATE >= dateStart
-                                        & stormDataFrame$DATE <= dateEnd, ]
+                                        & stormDataFrame$FATALITIES>=filter_fatalities, ]
+                                        # & stormDataFrame$DATE >= dateStart
+                                        # & stormDataFrame$DATE <= dateEnd, ]
   }
-  
-  cat("Comparing date: ", stormDataFrame$DATE[1000],"\n",
-      "with start date: ", dateStart,"\n")
   
   df <- storm_data_frame[storm_data_frame$LATITUDE > 0 & storm_data_frame$LONGITUDE > 0,]
   dfMod <- transform( df, LATITUDE=df$LATITUDE/100, LONGITUDE=-df$LONGITUDE/100)
@@ -51,8 +48,8 @@ GetStateStormData <- function( stormDataFrame, EffectName1, EffectName2,EventTyp
 
 UpdateState <- function(event_types,consequences,dates){
   event_type_list<-unlist(event_types,use.names = FALSE)
-  cat("event type = ",  event_type_list, "\n")
-  cat("length of consequences = ", length(consequences), "\n")
+  # cat("event type = ",  event_type_list, "\n")
+  # cat("length of consequences = ", length(consequences), "\n")
   if( length(consequences)<2) {
     effect_1<-ifelse(consequences[1] == "fatalities", "FATALITIES", "")
     effect_2 <- ifelse(consequences[1] == "injuries", "INJURIES", "")
@@ -61,15 +58,15 @@ UpdateState <- function(event_types,consequences,dates){
     effect_1<-ifelse(consequences[1] == "fatalities", "FATALITIES", "")
     effect_2<-ifelse(consequences[2] == "injuries", "INJURIES", "")
   }
-  cat("consequences = ",  consequences, "\n", "effect_1= ", effect_1,"\n","effect_2= ",effect_2,"\n")
+  # cat("consequences = ",  consequences, "\n", "effect_1= ", effect_1,"\n","effect_2= ",effect_2,"\n")
   
   date_start <- as.POSIXlt(format(dates[1]),format = "%Y-%M-%d")
   date_end<- as.POSIXlt(format(dates[2]),format = "%Y-%M-%d")
-  cat("start date = ", format(dates[1]), "; end date = ", format(dates[2]), "\n")
-  cat("class of date: ", class(date_start), "\n")
-  
-  cat("length of event type list: ", length(event_type_list), "\n")
-  
+  # cat("start date = ", format(dates[1]), "; end date = ", format(dates[2]), "\n")
+  # cat("class of date: ", class(date_start), "\n")
+  # 
+  # cat("length of event type list: ", length(event_type_list), "\n")
+  # 
   df <- GetStateStormData(dfMod,effect_1,effect_2,event_type_list,date_start,date_end)
 }
 
